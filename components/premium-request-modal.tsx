@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,27 @@ export function PremiumRequestModal({ carId, carTitle }: PremiumRequestModalProp
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const router = useRouter();
+
+    const [adminPhone, setAdminPhone] = useState<string>("");
+    const [fetchingPhone, setFetchingPhone] = useState(true);
+
+    useEffect(() => {
+        const fetchAdminPhone = async () => {
+            const { data } = await supabase
+                .from("settings")
+                .select("value")
+                .eq("key", "admin_phone")
+                .single();
+
+            if (data) {
+                setAdminPhone(data.value);
+            }
+            setFetchingPhone(false);
+        };
+        if (open) {
+            fetchAdminPhone();
+        }
+    }, [open]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -97,7 +118,15 @@ export function PremiumRequestModal({ carId, carTitle }: PremiumRequestModalProp
                     <div className="bg-blue-50 p-4 rounded-lg text-sm text-blue-800 space-y-2">
                         <p className="font-semibold">طريقة الدفع:</p>
                         <p>يرجى تحويل مبلغ <strong>5,000 د.ع</strong> إلى زين كاش:</p>
-                        <p dir="ltr" className="font-mono text-lg font-bold text-center select-all">07829251200</p>
+                        {fetchingPhone ? (
+                            <div className="flex justify-center py-2">
+                                <Loader2 className="animate-spin h-5 w-5 text-blue-600" />
+                            </div>
+                        ) : (
+                            <p dir="ltr" className="font-mono text-lg font-bold text-center select-all">
+                                {adminPhone || "يرجى التواصل مع الإدارة"}
+                            </p>
+                        )}
                         <p>ثم ارفع صورة إشعار التحويل في الأسفل.</p>
                     </div>
 
