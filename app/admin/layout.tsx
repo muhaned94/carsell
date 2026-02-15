@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Car, Users, LogOut, Star, Loader2, RefreshCw } from "lucide-react";
+import { LayoutDashboard, Car, Users, LogOut, Star, Loader2, RefreshCw, BarChart2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -60,6 +60,7 @@ export default function AdminLayout({
     const navItems = [
         { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard },
         { href: "/admin/requests", label: "طلبات التمييز", icon: Star, badge: pendingCount },
+        { href: "/admin/reports", label: "التقارير", icon: BarChart2 },
         { href: "/admin/cars", label: "السيارات", icon: Car },
         { href: "/admin/users", label: "المشتركين", icon: Users },
         { href: "/admin/settings", label: "الإعدادات", icon: RefreshCw },
