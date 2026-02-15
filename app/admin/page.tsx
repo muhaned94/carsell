@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { Car, CheckCircle, Users } from "lucide-react";
 import { DashboardCharts } from "@/components/admin/dashboard-charts";
+import { RealtimeVisitorStats } from "@/components/admin/realtime-visitor-stats";
 
 async function getStats() {
     const { count: carsCount } = await supabase.from("cars").select("*", { count: 'exact', head: true });
@@ -72,28 +73,7 @@ export default async function AdminDashboard() {
             {/* Bottom Section: Visitor Stats (Smaller) */}
             <div>
                 <h3 className="text-lg font-bold mb-4 text-muted-foreground">نشاط الزوار</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Current Online */}
-                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-100 dark:border-green-800 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                            <span className="text-sm font-medium text-green-700 dark:text-green-300">المتواجدون الآن</span>
-                        </div>
-                        <span className="text-xl font-bold text-green-700 dark:text-green-300">{stats.visitors.current_online}</span>
-                    </div>
-
-                    {/* Weekly Visits */}
-                    <div className="bg-white dark:bg-gray-900 p-4 rounded-lg border dark:border-gray-800 flex items-center justify-between">
-                        <span className="text-sm font-medium text-muted-foreground">زوار الأسبوع</span>
-                        <span className="text-xl font-bold">{stats.visitors.weekly_visits}</span>
-                    </div>
-
-                    {/* Monthly Visits */}
-                    <div className="bg-white dark:bg-gray-900 p-4 rounded-lg border dark:border-gray-800 flex items-center justify-between">
-                        <span className="text-sm font-medium text-muted-foreground">زوار الشهر</span>
-                        <span className="text-xl font-bold">{stats.visitors.monthly_visits}</span>
-                    </div>
-                </div>
+                <RealtimeVisitorStats initialStats={stats.visitors} />
             </div>
         </div>
     );

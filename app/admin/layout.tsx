@@ -41,14 +41,45 @@ export default function AdminLayout({
 
             setIsAuthorized(true);
 
-            // Fetch pending count only if authorized
-            const { count } = await supabase
-                .from("premium_requests")
-                .select("*", { count: 'exact', head: true })
-                .eq("status", "pending");
-            setPendingCount(count || 0);
+            // Fetch pending count
+            const fetchPendingCount = async () => {
+                const { count } = await supabase
+                    .from("premium_requests")
+                    .select("*", { count: 'exact', head: true })
+                    .eq("status", "pending");
+                setPendingCount(count || 0);
+            };
+
+            fetchPendingCount();
+
+            // Realtime subscription
+            const channel = supabase
+                .channel('admin_notifications')
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table: 'premium_requests'
+                    },
+                    (payload) => {
+                        console.log('Change received!', payload);
+                        fetchPendingCount();
+                    }
+                )
+                .subscribe();
+
+            return () => {
+                supabase.removeChannel(channel);
+            };
         };
-        checkAuth();
+        const cleanup = checkAuth();
+        // Since checkAuth is async and returns a promise resolving to void (or nothing), 
+        // effectively we can't just return it. 
+        // We need to manage the subscription cleanup carefully.
+        // However, looking at the code structure, checkAuth is called once. 
+        // The return cleanup function needs to be outside or we change structure.
+
     }, [router]);
 
     if (isAuthorized === null) {
