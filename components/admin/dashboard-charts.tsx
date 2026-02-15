@@ -54,7 +54,7 @@ export function DashboardCharts({ revenueData }: DashboardChartsProps) {
                         />
                         <Tooltip
                             contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
-                            formatter={(value: number | string | Array<number | string>) => [
+                            formatter={(value: any) => [
                                 `${new Intl.NumberFormat("ar-IQ").format(Number(value || 0))} د.ع`,
                                 "الإيرادات"
                             ]}
