@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { CarCard, Car } from "@/components/car-card";
+import { Car } from "@/components/car-card";
 import { supabase } from "@/lib/supabase";
 import { HeroSearch } from "@/components/hero-search";
+import { RealtimeCars } from "@/components/realtime-cars";
+
 async function getFeaturedCars() {
   const { data } = await supabase
     .from('cars')
@@ -80,11 +82,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredCars.map((car) => (
-            <CarCard key={car.id} car={car} />
-          ))}
-        </div>
+        <RealtimeCars initialCars={featuredCars} isPremium={true} limit={4} />
       </section>
 
       {/* Recent Listings Section */}
@@ -99,11 +97,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {recentCars.map((car) => (
-            <CarCard key={car.id} car={car} />
-          ))}
-        </div>
+        <RealtimeCars initialCars={recentCars} isPremium={false} limit={8} />
       </section>
 
       {/* CTA Section */}

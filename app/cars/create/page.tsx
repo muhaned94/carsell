@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import Image from "next/image";
+import { compressImage } from "@/lib/image-compression";
 
 export default function CreateCarPage() {
     const router = useRouter();
@@ -54,21 +55,34 @@ export default function CreateCarPage() {
         const uploadedUrls: string[] = [];
 
         for (const file of images) {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${userId}/${Math.random()}.${fileExt}`;
-            const filePath = `${fileName}`;
+            try {
+                // Compress image before uploading
+                const compressedBlob = await compressImage(file);
 
-            const { error: uploadError } = await supabase.storage
-                .from('cars')
-                .upload(filePath, file);
+                // Construct filename (ensure it ends with .jpg since we convert to jpeg)
+                const fileName = `${userId}/${Math.random()}.jpg`;
 
-            if (uploadError) {
-                console.error('Error uploading image:', uploadError);
+                // Convert Blob back to File for Supabase (optional, but good for metadata)
+                const compressedFile = new File([compressedBlob], fileName, { type: 'image/jpeg' });
+
+                const { error: uploadError } = await supabase.storage
+                    .from('cars')
+                    .upload(fileName, compressedFile);
+
+                if (uploadError) {
+                    console.error('Error uploading image:', uploadError);
+                    continue;
+                }
+
+                const { data } = supabase.storage.from('cars').getPublicUrl(fileName);
+                uploadedUrls.push(data.publicUrl);
+
+            } catch (error) {
+                console.error("Error compressing/uploading image:", error);
+                // Fallback to original file if compression fails? 
+                // meaningful error handling or continue
                 continue;
             }
-
-            const { data } = supabase.storage.from('cars').getPublicUrl(filePath);
-            uploadedUrls.push(data.publicUrl);
         }
         return uploadedUrls;
     };
