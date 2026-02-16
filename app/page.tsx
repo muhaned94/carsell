@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase";
 import { HeroSearch } from "@/components/hero-search";
 import { RealtimeCars } from "@/components/realtime-cars";
 
+export const revalidate = 0;
+
 async function getFeaturedCars() {
   const { data } = await supabase
     .from('cars')

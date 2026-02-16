@@ -25,7 +25,7 @@ export function RealtimeCars({ initialCars, isPremium, limit = 6, viewAllLink }:
         const fetchCars = async () => {
             let query = supabase
                 .from("cars")
-                .select("*")
+                .select("*, profiles(phone)")
                 .order("created_at", { ascending: false })
                 .limit(limit);
 
