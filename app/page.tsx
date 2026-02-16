@@ -37,7 +37,7 @@ export default async function Home() {
     <div className="flex flex-col gap-16 pb-16">
 
       {/* Hero Section */}
-      <section className="relative h-[500px] flex items-center justify-center bg-gray-900 text-white overflow-hidden">
+      <section className="relative min-h-[400px] md:h-[500px] flex items-center justify-center bg-gray-900 text-white overflow-hidden py-12 md:py-0">
 
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0 opacity-50">
@@ -54,10 +54,10 @@ export default async function Home() {
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6">
             ابحث عن سيارة أحلامك
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-2xl mx-auto">
+          <p className="text-lg md:text-2xl mb-6 md:mb-8 text-gray-200 max-w-2xl mx-auto">
             أكبر سوق لبيع وشراء السيارات في العراق. تصفح آلاف الإعلانات المميزة.
           </p>
 

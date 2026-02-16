@@ -153,44 +153,84 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Backdrop */}
             {isOpen && (
-                <div className="md:hidden bg-white border-t">
-                    <div className="px-4 pt-2 pb-4 space-y-2">
+                <div 
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            {/* Mobile Menu Sidebar */}
+            <div className={`fixed inset-y-0 right-0 w-[280px] bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out md:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                <div className="flex flex-col h-full">
+                    <div className="p-4 border-b flex items-center justify-between">
+                        <span className="font-bold text-lg">القائمة</span>
+                        <button onClick={() => setIsOpen(false)} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+                            <X size={20} />
+                        </button>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
                         <Link
                             href="/"
-                            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
-                            الرئيسية
+                             <Car size={20} />
+                            <span>الرئيسية</span>
                         </Link>
                         <Link
                             href="/cars/search"
-                            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
-                            تصفح السيارات
+                             <Car size={20} />
+                            <span>تصفح السيارات</span>
                         </Link>
                         {profile?.role === 'admin' && (
                             <Link
                                 href="/admin"
-                                className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50 text-blue-600 border border-blue-100"
+                                className="flex items-center gap-3 px-4 py-3 rounded-lg text-blue-600 bg-blue-50/50 hover:bg-blue-50 transition-colors"
                                 onClick={() => setIsOpen(false)}
                             >
-                                <LayoutDashboard size={18} className="inline-block ml-2" />
-                                لوحة التحكم
+                                <LayoutDashboard size={20} />
+                                <span>لوحة التحكم</span>
                             </Link>
                         )}
                         <Link
                             href="/cars/create"
-                            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-50 text-primary"
+                            className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary hover:bg-primary/5 transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
-                            بيع سيارتك
+                            <PlusCircle size={20} />
+                            <span>بيع سيارتك</span>
                         </Link>
+
+                        <div className="border-t my-2 pt-2">
+                             {!user ? (
+                                <Link
+                                    href="/login"
+                                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <User size={20} />
+                                    <span>تسجيل الدخول</span>
+                                </Link>
+                             ) : (
+                                <Link
+                                    href="/profile"
+                                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <User size={20} />
+                                    <span>حسابي</span>
+                                </Link>
+                             )}
+                        </div>
                     </div>
                 </div>
-            )}
+            </div>
         </nav>
     );
 }

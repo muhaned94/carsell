@@ -1,16 +1,11 @@
 import { supabase } from "@/lib/supabase";
 import { Car, CheckCircle, Users } from "lucide-react";
 import { DashboardCharts } from "@/components/admin/dashboard-charts";
-import { RealtimeVisitorStats } from "@/components/admin/realtime-visitor-stats";
 
 async function getStats() {
     const { count: carsCount } = await supabase.from("cars").select("*", { count: 'exact', head: true });
     const { count: premiumCount } = await supabase.from("cars").select("*", { count: 'exact', head: true }).eq('is_premium', true);
     const { count: usersCount } = await supabase.from("profiles").select("*", { count: 'exact', head: true });
-
-    // Fetch visitor stats using RPC
-    const { data: visitorData } = await supabase.rpc('get_visitor_stats');
-    const vStats = visitorData?.[0] || { current_online: 0, weekly_visits: 0, monthly_visits: 0 };
 
     // Fetch revenue chart data
     const { data: revenueData } = await supabase.rpc('get_financial_chart_data');
@@ -19,7 +14,6 @@ async function getStats() {
         cars: carsCount || 0,
         premium: premiumCount || 0,
         users: usersCount || 0,
-        visitors: vStats,
         revenueData: revenueData || []
     };
 }
@@ -69,12 +63,6 @@ export default async function AdminDashboard() {
 
             {/* Middle Section: Charts */}
             <DashboardCharts revenueData={stats.revenueData} />
-
-            {/* Bottom Section: Visitor Stats (Smaller) */}
-            <div>
-                <h3 className="text-lg font-bold mb-4 text-muted-foreground">نشاط الزوار</h3>
-                <RealtimeVisitorStats initialStats={stats.visitors} />
-            </div>
         </div>
     );
 }
