@@ -155,9 +155,11 @@ export default function CarDetailsPage({ params }: { params: any }) {
                                     <MessageCircle size={18} /> تواصل عبر واتساب
                                 </Button>
                             </a>
-                            <Button variant="outline" className="w-full gap-2">
-                                <Phone size={18} /> {car.profiles?.phone || "رقمه مخفي"}
-                            </Button>
+                            <a href={`tel:${finalPhone}`} className="w-full">
+                                <Button variant="outline" className="w-full gap-2">
+                                    <Phone size={18} /> {car.profiles?.phone || "رقمه مخفي"}
+                                </Button>
+                            </a>
                         </div>
                     </div>
 
