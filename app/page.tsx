@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { HeroSearch } from "@/components/hero-search";
 import { RealtimeCars } from "@/components/realtime-cars";
 
-export const revalidate = 0;
+export const revalidate = 60; // Revalidate every 60 seconds
 
 async function getFeaturedCars() {
   const { data } = await supabase

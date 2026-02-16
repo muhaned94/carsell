@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
-import { VisitorTracker } from "@/components/visitor-tracker";
 
 export default function RootLayout({
   children,
@@ -28,7 +27,6 @@ export default function RootLayout({
       <body
         className={`${cairo.variable} antialiased bg-background text-foreground flex flex-col min-h-screen`}
       >
-        <VisitorTracker />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
