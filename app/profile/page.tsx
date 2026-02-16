@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MapPin, Calendar, Clock, LogOut, User as UserIcon, Star, Loader2, Edit2, Save, X, CalendarDays, Home, Shield } from "lucide-react";
+import { MapPin, Calendar, Clock, LogOut, User as UserIcon, Star, Loader2, Edit2, Save, X, CalendarDays, Home, Shield, Trash2 } from "lucide-react";
 import { PremiumRequestModal } from "@/components/premium-request-modal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -131,6 +131,30 @@ export default function ProfilePage() {
             alert("خطأ في التحديث: " + error.message);
         } finally {
             setSaveLoading(false);
+        }
+    };
+
+    const handleDeleteCar = async (carId: string) => {
+        if (!confirm("هل أنت متأكد من حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+
+        try {
+            const { error } = await supabase
+                .from("cars")
+                .delete()
+                .eq("id", carId);
+
+            if (error) throw error;
+
+            setCars(prev => prev.filter(c => c.id !== carId));
+
+            if (pendingCarIds.has(carId)) {
+                const newPending = new Set(pendingCarIds);
+                newPending.delete(carId);
+                setPendingCarIds(newPending);
+            }
+        } catch (error: any) {
+            console.error("Error deleting car:", error);
+            alert("حدث خطأ أثناء الحذف: " + error.message);
         }
     };
 
@@ -372,15 +396,23 @@ export default function ProfilePage() {
                                             )
                                         )}
 
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <Link href={`/cars/${car.id}`} className="block">
+                                                <Button variant="outline" className="w-full text-xs px-1" size="sm">عرض</Button>
+                                            </Link>
                                             <Link href={`/cars/${car.id}/edit`} className="block">
-                                                <Button variant="outline" className="w-full gap-2">
-                                                    <Edit2 size={14} /> تعديل
+                                                <Button variant="outline" className="w-full gap-1 text-xs px-1" size="sm">
+                                                    <Edit2 size={12} /> تعديل
                                                 </Button>
                                             </Link>
-                                            <Link href={`/cars/${car.id}`} className="block">
-                                                <Button variant="outline" className="w-full">عرض</Button>
-                                            </Link>
+                                            <Button
+                                                variant="destructive"
+                                                className="w-full gap-1 text-xs px-1"
+                                                size="sm"
+                                                onClick={() => handleDeleteCar(car.id)}
+                                            >
+                                                <Trash2 size={12} /> حذف
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
